@@ -46,7 +46,7 @@ x-api-key: ${process.env.API_KEY || "YOUR_API_KEY_HERE"}
     },
     servers: [
       {
-        url: "postgresql://postgre:578E08jkqX1gZTrbCqEKXKqFBzY8mfYd@dpg-d42rsi95pdvs73dd5v8g-a/oms_ofa3",
+        url: "https://postgresql://postgre:578E08jkqX1gZTrbCqEKXKqFBzY8mfYd@dpg-d42rsi95pdvs73dd5v8g-a/oms_ofa3",
         description: "Local Development Server",
       },
     ],
@@ -82,7 +82,7 @@ function swaggerDocs(app) {
     })
   );
 
-  console.log(`📘 Swagger Docs available at: postgresql://postgre:578E08jkqX1gZTrbCqEKXKqFBzY8mfYd@dpg-d42rsi95pdvs73dd5v8g-a/oms_ofa3/api-docs`);
+  console.log(`📘 Swagger Docs available at: https://postgresql://postgre:578E08jkqX1gZTrbCqEKXKqFBzY8mfYd@dpg-d42rsi95pdvs73dd5v8g-a/oms_ofa3/api-docs`);
 }
 
 module.exports = swaggerDocs;
