@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: Order Management API
+  version: 1.0.0
+  description: Simple REST API built with Node.js, Express & PostgreSQL
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /records:
+    get:
+      summary: Retrieve all records or filter by status
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter records by status
+      responses:
+        "200":
+          description: List of records
+    post:
+      summary: Add a new record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+      responses:
+        "201":
+          description: Record created
+  /records/{id}:
+    put:
+      summary: Update a record by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+      responses:
+        "200":
+          description: Record updated
+    delete:
+      summary: Delete a record by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Record deleted
