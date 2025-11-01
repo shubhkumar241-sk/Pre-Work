@@ -51,7 +51,7 @@ router.post('/addRecord', auth, async (req, res,) => {
         res.status(201).json({ Record: result.rows[0], message: 'Add Record Successfully!' });
 
     } catch (error) {
-        console.error(error);
+        console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
@@ -94,7 +94,7 @@ router.get('/getRecords', auth, async (req, res) => {
 
         res.status(200).json(result.rows);
     } catch (error) {
-        console.error(error);
+        console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
@@ -202,5 +202,8 @@ router.delete("/deleteRecord", auth, async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+
+
 
 module.exports = router;
