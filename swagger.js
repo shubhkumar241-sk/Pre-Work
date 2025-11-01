@@ -46,7 +46,7 @@ x-api-key: ${process.env.API_KEY || "YOUR_API_KEY_HERE"}
     },
     servers: [
       {
-        url: "https://postgresql://postgre:578E08jkqX1gZTrbCqEKXKqFBzY8mfYd@dpg-d42rsi95pdvs73dd5v8g-a/oms_ofa3",
+        url: process.env.URL,
         description: "Local Development Server",
       },
     ],
