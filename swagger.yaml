@@ -1,12 +1,21 @@
 openapi: 3.0.0
 info:
-  title: Order Management API
-  version: 1.0.0
-  description: Simple REST API built with Node.js, Express & PostgreSQL
+  title: Records & Order Management API
+  version: 2.0.0
+  description: >
+    Combined **Records API** and **Order Management System API**
+    built with Node.js, Express & PostgreSQL.
+
 servers:
-  - url: postgresql://postgre:578E08jkqX1gZTrbCqEKXKqFBzY8mfYd@dpg-d42rsi95pdvs73dd5v8g-a/oms_ofa3
+  - url: http://localhost:3000
+    description: Local Server
+  - url: https://operation-management-system.onrender.com
+    description: Production Server (Render)
 
 paths:
+  # ----------------------------
+  # Existing Records API
+  # ----------------------------
   /records:
     get:
       summary: Retrieve all records or filter by status
@@ -35,6 +44,7 @@ paths:
       responses:
         "201":
           description: Record created
+
   /records/{id}:
     put:
       summary: Update a record by ID
@@ -69,3 +79,140 @@ paths:
       responses:
         "200":
           description: Record deleted
+
+  # ----------------------------
+  # 🧾 New Order Management API
+  # ----------------------------
+  /customers:
+    get:
+      summary: Get all customers
+      responses:
+        "200":
+          description: List of all customers
+    post:
+      summary: Add a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+      responses:
+        "201":
+          description: Customer created successfully
+
+  /products:
+    get:
+      summary: Retrieve all products
+      responses:
+        "200":
+          description: List of products
+    post:
+      summary: Add a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                stock:
+                  type: integer
+      responses:
+        "201":
+          description: Product created successfully
+
+  /orders:
+    get:
+      summary: Get all orders or filter by customer/date
+      parameters:
+        - in: query
+          name: customer_id
+          schema:
+            type: integer
+          description: Filter by customer ID
+        - in: query
+          name: last_days
+          schema:
+            type: integer
+          description: Get orders placed in the last N days
+      responses:
+        "200":
+          description: List of orders
+    post:
+      summary: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer_id:
+                  type: integer
+                product_ids:
+                  type: array
+                  items:
+                    type: integer
+                total_amount:
+                  type: number
+      responses:
+        "201":
+          description: Order created successfully
+
+  /payments:
+    get:
+      summary: Retrieve all payments
+      responses:
+        "200":
+          description: List of payments
+    post:
+      summary: Record a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_id:
+                  type: integer
+                amount:
+                  type: number
+                payment_method:
+                  type: string
+      responses:
+        "201":
+          description: Payment recorded successfully
+
+  /reports/top-customers:
+    get:
+      summary: Fetch top 3 customers with highest number of orders
+      responses:
+        "200":
+          description: Top 3 customers list
+
+  /reports/recent-orders:
+    get:
+      summary: Retrieve orders placed in the last 30 days
+      responses:
+        "200":
+          description: Orders from last 30 days
+
+  /reports/product-revenue:
+    get:
+      summary: Calculate total revenue per product
+      responses:
+        "200":
+          description: Revenue by product

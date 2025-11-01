@@ -58,16 +58,18 @@ It allows you to perform **CRUD (Create, Read, Update, Delete)** operations on r
 │ └── www # Server start file
 │
 ├── routes/
-│ └── record.js # CRUD routes
+│ └── records.js # CRUD routes
+│ └── orders.js # CRUD routes
 │
 ├── middleware/
 │ └── auth.js # Authentication middleware
 │
 ├── dbconfig.js # PostgreSQL connection
-├── swagger.js # Swagger setup
 ├── app.js # Express app initialization
 ├── package.json # Dependencies
-└── README.md # Documentation
+├── README.md # Documentation
+├── swagger.js # Swagger setup
+└── swagger.yaml # Swagger Documentation
 
 
 ---
@@ -131,21 +133,128 @@ CREATE TABLE records (
   created_at timestamp without time zone
 );
 
+Part 2: Database Design and Querying
 
-6️⃣ Start the Server
+This part demonstrates the Order Management System (OMS) database design, data population, and essential SQL queries for analytics.
+ Database Schema Overview
+The OMS database includes the following entities:
+
+
+Customers → Stores customer details such as name, email, phone, and address.
+
+
+Products → Contains product catalog with price and stock information.
+
+
+Orders → Tracks customer orders and order status.
+
+
+Order_Products → Defines the many-to-many relationship between Orders and Products.
+
+
+Payments → Records payment information for each order.
+
+
+Relationships:
+
+
+One customer can have multiple orders.
+
+
+One order can include multiple products.
+
+
+Each order has one or more payments.
+
+
+ Schema Creation Script
+All database tables and relationships are defined in order_management.sql.
+It includes DROP, CREATE, and INSERT statements to set up and populate the database.
+Main Tables:
+TableDescriptioncustomersCustomer informationproductsProduct catalogordersOrder records linked to customersorder_productsMany-to-many link between orders and productspaymentsPayment records for each order
+🧠 Sample Data
+The schema includes:
+
+
+5 Customers
+
+
+10 Orders
+
+
+10 Products
+
+
+Associated payments and order-product mappings
+
+
+ Key SQL Queries
+ Top 3 customers with the highest number of orders
+SELECT c.name, COUNT(o.order_id) AS total_orders
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.name
+ORDER BY total_orders DESC
+LIMIT 3;
+
+Finds the most active customers based on total order count.
+
+
+Retrieve orders placed in the last 30 days
+SELECT *
+FROM orders
+WHERE order_date >= NOW() - INTERVAL '30 days';
+
+
+⏰ Useful for showing recent orders and activity trends.
+
+
+3️⃣ Calculate total revenue for each product
+SELECT 
+    p.name AS product_name,
+    SUM(op.quantity * p.price) AS total_revenue
+FROM products p
+JOIN order_products op ON p.product_id = op.product_id
+JOIN orders o ON op.order_id = o.order_id
+GROUP BY p.name
+ORDER BY total_revenue DESC;
+
+
+ Helps analyze product performance and sales contribution.
+
+
+ Design Choices Explained
+EntityReason for DesignCustomersBase entity for user info and relationshipsProductsIndependent table to maintain reusable catalogOrdersConnects customers to purchased itemsOrder_ProductsEnables many-to-many linkage between orders & productsPaymentsAllows tracking multiple payment methods per order
+
+
+
+
+Start the Server
 npm start
 
 
 Visit the server at:
 
-http://localhost:3000
+https://operation-management-system.onrender.com
 
 
 🌐 API Endpoints
 Method	Endpoint	Description	Example Usage
-POST	/api/addRecord	Add new record	/api/addRecord?name=John&status=active
-POST	/api/getRecords	Get all or filter by status	/api/getRecords?status=active
-PUT	/api/updateRecord	Update record	/api/updateRecord?id=1&name=Jane&status=inactive
-DELETE	/api/deleteRecord	Delete record by ID	/api/deleteRecord?id=1
+POST	/records/addRecord	Add new record	/records/addRecord?name=John&status=active
+POST	/records/getRecords	Get all or filter by status	/records/getRecords?status=active
+PUT	/records/updateRecord	Update record	/records/updateRecord?id=1&name=Jane&status=inactive
+DELETE	/records/deleteRecord	Delete record by ID	/records/deleteRecord?id=1
+
+POST	/orders/addCustomer	Add a new customer	/orders/addCustomer
+GET	/orders/getCustomers	Retrieve all customers	/orders/getCustomers
+POST	/orders/addProduct	Add a new product	/orders/addProduct
+GET	/orders/getProducts	Retrieve all products	/orders/getProducts
+POST	/orders/addOrder	Create a new order	/orders/addOrder
+GET	/orders/getOrders	Retrieve all orders	/orders/getOrders
+GET	/orders/getRecentOrders	Get all orders from last 30 days	/orders/getRecentOrders
+GET	/orders/topCustomers	Get top 3 customers by total orders	/orders/topCustomers
+GET	/orders/productRevenue	Calculate total revenue for each product	/orders/productRevenue
+POST	/orders/addPayment	Record a payment for an order	/orders/addPayment
+GET	/orders/getPayments	Retrieve all payments	/orders/getPayments
 
 

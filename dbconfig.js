@@ -10,6 +10,11 @@ const pool = new Pool({
 });
 
 pool.on("connect", () => {
+  console.log({
+  host: process.env.PGHOST,
+  user: process.env.PGUSER,
+  database: process.env.PGDATABASE,
+});
   console.log("Connected to PostgreSQL database");
 });
 
