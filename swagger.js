@@ -46,7 +46,7 @@ x-api-key: ${process.env.API_KEY || "YOUR_API_KEY_HERE"}
     },
     servers: [
       {
-        url: process.env.URL,
+        url: process.env.PGURL,
         description: "Local Development Server",
       },
     ],
